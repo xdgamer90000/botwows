@@ -64,10 +64,19 @@ public class InputData extends SlashCommands {
     @Override
     public void handleEvent(SlashCommandInteractionEvent event){
         String inGameName = event.getOption("in-game-name").getAsString();
+        if(inGameName.contains(",")){
+            event.reply("name is invalid").setEphemeral(true).queue();
+        }
         String server = event.getOption("server").getAsString();
+        if(!serverList.contains(server)){
+            event.reply("server is invalid").setEphemeral(true).queue();
+        }
         Integer score = event.getOption("score").getAsInt();
         Boolean divs = event.getOption("division").getAsBoolean();
         String usedShip = event.getOption("ship-used").getAsString();
+        if(usedShip.contains(",")){
+            event.reply("ship name is invalid").setEphemeral(true).queue();
+        }
         Message.Attachment scorecard = event.getOption("scorecard-screenshot").getAsAttachment();
         Message.Attachment teamScore = event.getOption("team-score-screenshot").getAsAttachment();
         byte[] imageData = null;
@@ -80,8 +89,6 @@ public class InputData extends SlashCommands {
         else{
             //send error message
         }
-        serverList.contains(server);
-
         System.out.println("recieved");
         try{
             saveData(inGameName,server,score,divs,usedShip,username);
@@ -91,8 +98,14 @@ public class InputData extends SlashCommands {
         }
 
         //MessageEmbed embed = new EmbedBuilder().setImage("attachment://scorecard");
-        if(imageData != null && serverList.contains(server) && !divs){
-            event.reply(new MessageCreateBuilder().addContent("In game name: " + inGameName + "\n" + server + "\nScore: " + score + "\nShip: " + usedShip + "\n").addFiles(FileUpload.fromData(imageData,"scorecard.jpg")).addFiles(FileUpload.fromData(imageData2,"teamScore.jpg")).build()).queue();//fix extensions
+        if(imageData != null && serverList.contains(server)){
+            String inDiv = "";
+            if(divs){
+                inDiv = "Yes";
+            }else{
+                inDiv = "No";
+            }
+            event.reply(new MessageCreateBuilder().addContent("In game name: " + inGameName + "\nServer: " + server + "\nScore: " + score + "\nShip: " + usedShip + "\nIn Division: " + inDiv + "\n").addFiles(FileUpload.fromData(imageData,"scorecard.jpg")).addFiles(FileUpload.fromData(imageData2,"teamScore.jpg")).build()).queue();//fix extensions
         }
         else{
             event.reply("Entry is invalid").setEphemeral(true).queue();

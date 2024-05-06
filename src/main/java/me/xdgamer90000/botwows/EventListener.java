@@ -1,5 +1,6 @@
 package me.xdgamer90000.botwows;
 
+import me.xdgamer90000.botwows.commands.EndContest;
 import me.xdgamer90000.botwows.commands.InputData;
 import me.xdgamer90000.botwows.commands.RemoveData;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -46,6 +47,7 @@ public class EventListener extends ListenerAdapter {
     public void onReady(ReadyEvent event){
         addCommand(new InputData());
         addCommand(new RemoveData());
+        addCommand(new EndContest());
     }
 
 }
